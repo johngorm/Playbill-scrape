@@ -39,9 +39,8 @@ app.get('/', function(req, res){
 
 		    	let title = $(this).siblings().children('a').attr('title');
 		    	let link = $(this).siblings().children('a').attr("href");
-		    	let author = $(this);
+		    	let author = $(this).text();
 		    	let imglink = $(this).parent().siblings().children().children().children().attr('src');
-
 		    	scrape_result.push({
 		    		title: title,
 		    		link: scrape_web_home + link,

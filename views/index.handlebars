@@ -5,7 +5,9 @@
 {{/if}}
 
 {{#each newsLink}}
-	<a href={{this.link}} class='newsTitle'>{{this.title}}</a>
-	<div class='newsSubtitle'>{{{this.author}}}</div>
-	<hr>
+	<div class='newsItem'>
+		<img scr={{this.imglink}}>
+		<a href={{this.link}} class='newsTitle'>{{this.title}}</a>
+		<div class='newsSubtitle'>{{this.author}}</div>
+	</div>
 {{/each}}
