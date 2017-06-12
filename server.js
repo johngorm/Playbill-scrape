@@ -14,13 +14,23 @@ const app = express();
 
 app.use(bodyParser.urlencoded({extended: false}));
 
-
+app.engine('handlebars', handlebars({defaultLayout: 'main'}));
+app.set('views', __dirname + '/views')
+app.set('view engine', 'handlebars');
 
 app.get('/', function(req, res){
 
 	request('http://www.playbill.com/news', function(error, response, html){
+		
 		if(error){
-			res.send('Unable to scrape website');
+			throw error;
+		}
+		if(response.statusCode !== 200){
+			if(response.statusCode === 404){
+				console.error('ERROR: Website not found');
+				res.status(404);	
+				
+			}
 		}
 		else{
 			let $ = cheerio.load(html);
@@ -29,16 +39,18 @@ app.get('/', function(req, res){
 
 		    	let title = $(this).siblings().children('a').attr('title');
 		    	let link = $(this).siblings().children('a').attr("href");
+		    	let author = $(this);
 		    	let imglink = $(this).parent().siblings().children().children().children().attr('src');
 
 		    	scrape_result.push({
 		    		title: title,
 		    		link: scrape_web_home + link,
+		    		author: author,
 		    		imglink: imglink
 		    	});
 
 			});
-			res.json(scrape_result);
+			res.render('index', {newsLink : scrape_result});
 		}
 
 	});

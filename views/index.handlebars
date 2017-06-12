@@ -1,0 +1,11 @@
+<h1>Broadway News</h1>
+
+{{#if error}}
+	<h1>Cannot connect to playbill.com. Please try again later.</h1>
+{{/if}}
+
+{{#each newsLink}}
+	<a href={{this.link}} class='newsTitle'>{{this.title}}</a>
+	<div class='newsSubtitle'>{{{this.author}}}</div>
+	<hr>
+{{/each}}
