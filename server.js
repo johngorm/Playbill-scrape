@@ -4,9 +4,12 @@ const bodyParser = require('body-parser');
 const request = require('request');
 const cheerio = require('cheerio');
 const mongoose = require('mongoose');
+const Article = require('./models/Article.js');
+const Comment = require('./models/Comment.js');
 
 //Const variable for host website to append to links
 const scrape_web_home = 'http://www.playbill.com';
+const scrape_url = 'http://www.playbill.com/news';
 const PORT = process.env.PORT || 3000;
 
 const app = express();
@@ -18,9 +21,21 @@ app.engine('handlebars', handlebars({defaultLayout: 'main'}));
 app.set('views', __dirname + '/views')
 app.set('view engine', 'handlebars');
 
-app.get('/', function(req, res){
+mongoose.connect('mongodb://localhost/playbill');
+const db = mongoose.connection
 
-	request('http://www.playbill.com/news', function(error, response, html){
+db.on("error", function(error) {
+  console.log("Mongoose Error: ", error);
+});
+
+// Once logged in to the db through mongoose, log a success message
+db.once("open", function() {
+  console.log("Mongoose connection successful.");
+});
+
+app.get('/scrape', function(req, res){
+
+	request(scrape_url, function(error, response, html){
 		
 		if(error){
 			throw error;
@@ -35,26 +50,43 @@ app.get('/', function(req, res){
 		else{
 			let $ = cheerio.load(html);
 			let scrape_result = [];
+			let count = 0;
 			$('div.bsp-list-promo-subtitle').each(function(i, element){
+				let result = {}
 
-		    	let title = $(this).siblings().children('a').attr('title');
-		    	let link = $(this).siblings().children('a').attr("href");
-		    	let author = $(this).text();
-		    	let imglink = $(this).parent().siblings().children().children().children().attr('src');
-		    	scrape_result.push({
-		    		title: title,
-		    		link: scrape_web_home + link,
-		    		author: author,
-		    		imglink: imglink
-		    	});
+		    	result.title = $(this).siblings().children('a').attr('title');
+		    	result.link = $(this).siblings().children('a').attr("href");
+		    	result.author = $(this).text();
+		    	
+		    	let articleEntry = new Article(result);
+
+		    	articleEntry.save((err, doc) =>{
+		    		if(err){
+		    			throw err;
+		    		}
+		    		else{
+		    			count++;
+		    			console.log(doc);
+		    		}
+		    	})
 
 			});
-			res.render('index', {newsLink : scrape_result});
+			res.send(`${scrape_url} successfully scraped`);
 		}
 
 	});
 });
 
+app.get('/articles', function(req, res){
+	Article.find({}, (err, results) =>{
+		if(err){
+			throw err;
+		}
+		else{
+			res.render('index', {newsLink : results});
+		}
+	});
+});
 
 app.listen(PORT, function(){
 	console.log('Server listening on port ' + PORT);
