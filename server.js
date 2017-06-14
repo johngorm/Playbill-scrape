@@ -22,7 +22,9 @@ app.set('views', __dirname + '/views')
 app.set('view engine', 'handlebars');
 
 mongoose.connect('mongodb://localhost/playbill');
-const db = mongoose.connection
+const db = mongoose.connection;
+
+mongoose.Promise = Promise;
 
 db.on("error", function(error) {
   console.log("Mongoose Error: ", error);
@@ -50,7 +52,6 @@ app.get('/scrape', function(req, res){
 		else{
 			let $ = cheerio.load(html);
 			let scrape_result = [];
-			let count = 0;
 			$('div.bsp-list-promo-subtitle').each(function(i, element){
 				let result = {}
 
@@ -58,18 +59,24 @@ app.get('/scrape', function(req, res){
 		    	result.link = $(this).siblings().children('a').attr("href");
 		    	result.author = $(this).text();
 		    	
-		    	let articleEntry = new Article(result);
-
-		    	articleEntry.save((err, doc) =>{
-		    		if(err){
+		    	Article.findOne(result, (error, news_article) =>{
+		    		if(error){
 		    			throw err;
 		    		}
-		    		else{
-		    			count++;
-		    			console.log(doc);
+		    		else if(!news_article){
+		    			
+		    			let articleEntry = new Article(result);
+				    	articleEntry.save((err, doc) =>{
+				    		if(err){
+				    			throw err;
+				    		}
+				    		else{
+				    			
+				    			console.log(doc);
+				    		}
+				    	});
 		    		}
-		    	})
-
+		    	});
 			});
 			res.send(`${scrape_url} successfully scraped`);
 		}
