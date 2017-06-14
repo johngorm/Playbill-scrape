@@ -4,8 +4,11 @@ const bodyParser = require('body-parser');
 const request = require('request');
 const cheerio = require('cheerio');
 const mongoose = require('mongoose');
+const methodOverride = require('method-override');
 const Article = require('./models/Article.js');
 const Comment = require('./models/Comment.js');
+
+
 
 //Const variable for host website to append to links
 const scrape_web_home = 'http://www.playbill.com';
@@ -16,6 +19,8 @@ const app = express();
 
 
 app.use(bodyParser.urlencoded({extended: false}));
+//Allow app use of method override so we can change articles "favorite" status
+app.use(methodOverride("_method"));
 
 app.engine('handlebars', handlebars({defaultLayout: 'main'}));
 app.set('views', __dirname + '/views')
@@ -94,6 +99,65 @@ app.get('/articles', function(req, res){
 		}
 	});
 });
+
+app.get('/articles/:id', function(req, res){
+	Article.find({ "_id" : mongoose.Types.ObjectId(req.params.id)})
+	.populate('comment')
+	.exec(function(error, doc){
+		if(error){
+			throw error;
+		}
+		else{
+			res.json(doc);
+		}
+	});
+});
+
+app.post('/articles/:id', (req, res) =>{
+	//Create new comment for an article
+	let newComment = new Comment(req.body);
+
+	newComment.save((err, doc) =>{
+		if(err){
+			throw err;
+		}
+		else{
+			res.send(doc);
+		}
+	});
+});
+
+//Create route to save 
+app.put('/articles/:id', (req, res) =>{
+
+	Article.findOne({"_id" : mongoose.Types.ObjectId(req.params.id)},'saved').exec((err, doc) =>{
+		if(err){
+			throw err;
+		}
+		else{
+		
+			let newSaveState = !doc.saved;
+		
+			Article.update({"_id" : req.params.id}, {'saved': newSaveState}, (err, result) =>{
+				if(err){
+					throw err;
+				}
+				else{
+					res.redirect("/articles");
+				}
+			});
+
+		}
+	});
+});
+
+
+app.all('/articles/:id', function(req, res, next){
+	console.log('Return to home page');
+
+})
+
+
 
 app.listen(PORT, function(){
 	console.log('Server listening on port ' + PORT);
