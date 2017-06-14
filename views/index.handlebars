@@ -8,6 +8,7 @@
 {{#each newsLink}}
 	{{> news}}
 	{{#if saved}}
+		<button class='btn btn-lg btn-info btn-comment' article_id='{{this.id}}'>Add Comment</button>
         <form action="/articles/{{this.id}}?_method=PUT" method='POST'>
             <button class='btn btn-danger btn-lg' type="submit">Unfavorite</button>
         </form>
@@ -19,5 +20,11 @@
     {{/unless}}
    	<hr />
 {{/each}}
+<div id='commentModal' class='modal'>
+
+	<div class='modal-content'>
+		<span class='close'>&times;</span>
+		<p>Test text</p>
+	</div>
 
 </div>
