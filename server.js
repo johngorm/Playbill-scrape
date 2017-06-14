@@ -21,6 +21,7 @@ const app = express();
 app.use(bodyParser.urlencoded({extended: false}));
 //Allow app use of method override so we can change articles "favorite" status
 app.use(methodOverride("_method"));
+app.use(express.static("./public"));
 
 app.engine('handlebars', handlebars({defaultLayout: 'main'}));
 app.set('views', __dirname + '/views')
@@ -89,6 +90,17 @@ app.get('/scrape', function(req, res){
 	});
 });
 
+app.get('/favorites', function(req, res){
+	Article.find({"saved" : true}).exec((error, results) =>{
+		if(error){
+			throw error;
+		}
+		else{
+			res.render('index', {newsLink : results})
+		}
+	})
+})
+
 app.get('/articles', function(req, res){
 	Article.find({}, (err, results) =>{
 		if(err){
@@ -129,7 +141,7 @@ app.post('/articles/:id', (req, res) =>{
 
 //Create route to save 
 app.put('/articles/:id', (req, res) =>{
-
+	
 	Article.findOne({"_id" : mongoose.Types.ObjectId(req.params.id)},'saved').exec((err, doc) =>{
 		if(err){
 			throw err;
@@ -143,6 +155,7 @@ app.put('/articles/:id', (req, res) =>{
 					throw err;
 				}
 				else{
+					
 					res.redirect("/articles");
 				}
 			});
