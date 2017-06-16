@@ -113,20 +113,23 @@ app.get('/articles', function(req, res){
 });
 
 app.get('/articles/:id', function(req, res){
-	Article.find({ "_id" : mongoose.Types.ObjectId(req.params.id)})
+	Article.findOne({ "_id" : mongoose.Types.ObjectId(req.params.id)})
 	.populate('comment')
 	.exec(function(error, doc){
 		if(error){
 			throw error;
 		}
 		else{
-			res.json(doc);
+			console.log(doc);
+			
+			res.send(doc);
 		}
 	});
 });
 
 app.post('/articles/:id', (req, res) =>{
-	//Create new comment for an article
+	
+	
 	let newComment = new Comment(req.body);
 
 	newComment.save((err, doc) =>{
@@ -134,7 +137,17 @@ app.post('/articles/:id', (req, res) =>{
 			throw err;
 		}
 		else{
-			res.send(doc);
+			console.trace(doc);
+			Article.findOneAndUpdate({"_id" : req.params.id}, {$push: {"comment" : doc._id}})
+			.exec(function(error, article){
+				if(error){
+					throw error;
+				}
+				else{
+					console.trace(article.comment);
+					res.send(article);
+				}
+			})
 		}
 	});
 });
