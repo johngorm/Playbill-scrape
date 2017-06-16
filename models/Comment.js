@@ -5,7 +5,7 @@ let CommentSchema = new Schema({
 	title: {
 		type: String
 	},
-	body: {
+	message: {
 		type: String
 	}
 });
