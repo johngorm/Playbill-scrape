@@ -41,14 +41,15 @@ $('div.container').on("click", '.btn-comment', function(){
        
 
         if(article.comment.length){
-            console.log(article.comment);
+
             for(let doc in article.comment){
                 let currentCom = article.comment[doc];
+                console.trace(currentCom);
                 let $comm = $('<div>').addClass('comment');
                 //Get a title from the database or create one for the client that
-                let $commTitle = $('<h3>').text(doc.title);
-                let $commBody = $('<p>').text(doc.message);
-                let $deleteCommBtn = $(`<button class="btn btn-lg btn-danger btn-delete-comm" data-commentID=${doc._id}>&times;</button>`);
+                let $commTitle = $('<h3>').text(currentCom.title);
+                let $commBody = $('<p>').text(currentCom.message);
+                let $deleteCommBtn = $(`<button class="btn btn-lg btn-danger btn-delete-comm" data-commentID=${currentCom._id}>&times;</button>`);
                 $comm.append($commTitle).append($commBody);
                 $commentSection.append($comm);
             }

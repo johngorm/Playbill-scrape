@@ -144,8 +144,8 @@ app.post('/articles/:id', (req, res) =>{
 					throw error;
 				}
 				else{
-					console.trace(article.comment);
-					res.send(article);
+					console.log(article.comment);
+					res.redirect('/articles');
 				}
 			})
 		}
@@ -177,11 +177,6 @@ app.put('/articles/:id', (req, res) =>{
 	});
 });
 
-
-app.all('/articles/:id', function(req, res, next){
-	console.log('Return to home page');
-
-})
 
 
 
