@@ -18,6 +18,29 @@ function createForm(articleId){
     $form.append($commentTitle).append($commentMessage).append($commentBtn);
     return $form;
 }
+//Takes in an array of ObjectIDs for Comments that get added to the Comment Section 
+function renderComments(commentIdArray){
+
+    $("#commentSection").empty();
+    if(commentIdArray.length){
+
+         for(let doc in commentIdArray){
+            let currentCom = commentIdArray[doc];
+            let $comm = $('<div>').addClass('comment');
+            let $commTitle = $('<h4>').text(currentCom.title);
+            let $commBody = $('<p>').text(currentCom.message);
+            let $deleteCommBtn = $(`<button class="btn btn-md btn-danger btn-delete-comm" data-comment-id=${currentCom._id}>&times;</button>`);
+            $comm.append($deleteCommBtn).append($commTitle).append($commBody);
+            $("#commentSection").append($comm);
+        }
+
+    }
+    else{
+        //Inform user if no comments attached to article
+        $('#commentSection').html('<h3 class="error comment-error"><strong> No comments</strong></h3>')
+    }
+    
+}
 
 // When the user clicks on the button, open the modal 
 
@@ -37,34 +60,30 @@ $('div.container').on("click", '.btn-comment', function(){
         let closeBtn =" <span class='close'>&times;</span>";
         let id_num = $("<span>").html("ID: " + article._id);
         let $commentSection = $('<div>').attr('id', 'commentSection').addClass('well').text('Comments');
-        
-       
-
-        if(article.comment.length){
-
-            for(let doc in article.comment){
-                let currentCom = article.comment[doc];
-                console.trace(currentCom);
-                let $comm = $('<div>').addClass('comment');
-                //Get a title from the database or create one for the client that
-                let $commTitle = $('<h3>').text(currentCom.title);
-                let $commBody = $('<p>').text(currentCom.message);
-                let $deleteCommBtn = $(`<button class="btn btn-lg btn-danger btn-delete-comm" data-commentID=${currentCom._id}>&times;</button>`);
-                $comm.append($commTitle).append($commBody);
-                $commentSection.append($comm);
-            }
-        }
 
         header.append(title).prepend(closeBtn).append(id_num);
-        body.append($commentSection).append(createForm(article._id));
+        body.append($commentSection);
+        renderComments(article.comment)
+        body.append(createForm(article._id));
         modal.css('display', 'block');
     	
     })
 });
 
 
-$('div#commentSection').on('click', '.btn-delete-comm', function(){
-
+$('.modal-body').on('click', '.btn-delete-comm', function(){
+    let id = $(this).data('comment-id');
+    $.ajax({
+        url: "/comment/" + id,
+        method: "DELETE"
+    }).done(function(result){
+        $.ajax({
+            url: "/articles",
+            method: "GET"
+        }).done(function(article){
+            renderComments(article.comments);
+        })
+    });
 });
 
 
@@ -73,13 +92,5 @@ $(".modal").on('click', '.close', function(){
     modal.css('display', 'none');
 });
 
-// When the user clicks anywhere outside of the modal, close it
-// window.onclick = function(event) {
-// 	console.log($(event.target)[0] == modal);
-// 	console.log(modal);
-//     if ($(event.target) === modal) {
-//     	console.log('x')
-//         modal.css('display', 'none')
-//     }
-// }
+
 })
