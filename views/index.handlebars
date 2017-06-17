@@ -1,34 +1,34 @@
 <div class="container">
-<h1>Broadway News</h1>
+    <h1>Broadway News</h1>
 
-{{#if error}}
-	<h1>Cannot connect to playbill.com. Please try again later.</h1>
-{{/if}}
-
-{{#each newsLink}}
-	{{> news}}
-	{{#if saved}}
-		<button class='btn btn-lg btn-info btn-comment' data-article-id='{{id}}'>Add Comment</button>
-        <form action="/articles/{{id}}?_method=PUT" method='POST'>
-            <button class='btn btn-danger btn-lg' type="submit">Unfavorite</button>
-        </form>
+    {{#if error}}
+	   <h1>Cannot connect to playbill.com. Please try again later.</h1>
     {{/if}}
-    {{#unless saved}}
-        <form action="/articles/{{id}}?_method=PUT" method='POST'>
-            <button class='btn btn-success btn-lg' type='submit'>Favorite</button>
-        </form>
-    {{/unless}}
-   	<hr />
-{{/each}}
 
-<div id='commentModal' class='modal'>
-    
-	<div class='modal-content'>
-        <div class='modal-heading'>
-            <span class='close'>&times;</span> 
-        </div>    
-		<div class='modal-body'>
-		</div>
-	</div>
+    {{#each newsLink}}
+    	{{> news}}
+    	{{#if saved}}
+    		<button class='btn btn-lg btn-info btn-comment' data-article-id='{{id}}'>Add Comment</button>
+            <form action="/articles/{{id}}?_method=PUT" method='POST'>
+                <button class='btn btn-danger btn-lg' type="submit">Unfavorite</button>
+            </form>
+        {{/if}}
+        {{#unless saved}}
+            <form action="/articles/{{id}}?_method=PUT" method='POST'>
+                <button class='btn btn-success btn-lg' type='submit'>Favorite</button>
+            </form>
+        {{/unless}}
+       	<hr />
+    {{/each}}
+
+    <div id='commentModal' class='modal'>
+    	<div class='modal-content'>
+            <div class='modal-heading'>
+            </div>    
+    		<div class='modal-body'>
+    		</div>
+    	</div>
+
+    </div>
 
 </div>
