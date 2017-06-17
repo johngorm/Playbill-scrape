@@ -8,7 +8,6 @@ var btn = $(".btn-comment");
 // Get the <span> element that closes the modal
 var span = $(".close")[0];
 
-
 //Function to create submission for artical modal
 function createForm(articleId){
     let $form = $(`<form action="/articles/${articleId}" method="POST">`);
@@ -56,7 +55,7 @@ $('div.container').on("click", '.btn-comment', function(){
     	url: '/articles/' + id,
     	method: 'GET'
     }).done(function(article, status){
-        let title = $("<h2>").html(article.title);
+        let title = $(`<h2><a href=${article.link}>${article.title}</a></h2>`);
         let closeBtn =" <span class='close'>&times;</span>";
         let id_num = $("<span>").html("ID: " + article._id);
         let $commentSection = $('<div>').attr('id', 'commentSection').addClass('well').text('Comments');
