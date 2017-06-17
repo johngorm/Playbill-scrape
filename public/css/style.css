@@ -1,5 +1,26 @@
-h1{
-    color: red;
+
+.container form{
+    display: inline-block;
+}
+
+.container form, .container button{
+    float: right;
+    margin-bottom: 15px ;
+}
+
+hr{
+    clear: right;
+}
+
+
+.newsItem a{
+    font-style: none;
+    font-size: 36px;
+    font-color: black;
+}
+
+.newsSubtitle{
+    font-size: 1.3em;
 }
 
 /* The Modal (background) */
@@ -38,4 +59,31 @@ h1{
     color: black;
     text-decoration: none;
     cursor: pointer;
+}
+
+.modal-body form{
+    float: initial;
+}
+
+.comment{
+    background: white;
+    position: relative;
+    height: 8em;
+    text-align: center;
+    border: 2px solid black;
+    border-radius: 6px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.comment h4{
+    font-style: bold;
+}
+.comment p{
+    font-size: 18px;
+}
+.btn-delete-comm{
+    
+    position: absolute;
+    right: 10px;
+    top: 10px;
 }

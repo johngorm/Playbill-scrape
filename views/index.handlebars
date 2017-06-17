@@ -1,9 +1,9 @@
 <div class="container">
     <h1>Broadway News</h1>
 
-    {{#if error}}
+    {{#unless newsLink}}
 	   <h1>Cannot connect to playbill.com. Please try again later.</h1>
-    {{/if}}
+    {{/unless}}
 
     {{#each newsLink}}
     	{{> news}}
