@@ -178,6 +178,28 @@ app.put('/articles/:id', (req, res) =>{
 });
 
 
+app.delete('/comment/:id', function(req, res){
+
+	let commentPromise = Comment.findOneAndRemove({
+		"_id" : mongoose.Types.ObjectId(req.params.id)
+	});
+	let articleArrayPromise = Article.findOneAndUpdate(
+		{ "comments" :
+			{ $in: [mongoose.Types.ObjectId(req.params.id)]}
+		},
+		{ $pull :
+			{"comments" :
+				{ $in: [mongoose.Types.ObjectId(req.params.id) ]}
+			}
+		}
+	);
+	Promise.all([commentPromise, articleArrayPromise]).then( (article) =>{
+		console.log(article);
+		res.json(article);
+
+	})
+});
+
 
 
 app.listen(PORT, function(){
