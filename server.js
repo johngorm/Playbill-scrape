@@ -62,7 +62,7 @@ app.get('/scrape', function(req, res){
 				let result = {}
 
 		    	result.title = $(this).siblings().children('a').attr('title');
-		    	result.link = $(this).siblings().children('a').attr("href");
+		    	result.link = scrape_web_home + $(this).siblings().children('a').attr("href");
 		    	result.author = $(this).text();
 		    	
 		    	Article.findOne(result, (error, news_article) =>{
