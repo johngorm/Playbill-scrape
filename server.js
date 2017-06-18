@@ -1,6 +1,7 @@
 const express = require('express');
 const handlebars = require('express-handlebars');
 const bodyParser = require('body-parser');
+const path = require('path');
 const request = require('request');
 const cheerio = require('cheerio');
 const mongoose = require('mongoose');
@@ -41,7 +42,12 @@ db.once("open", function() {
   console.log("Mongoose connection successful.");
 });
 
+app.get('/', function(req,res){
+	res.sendFile(path.join(process.cwd() + "/public/home.html"));
+})
+
 app.get('/scrape', function(req, res){
+	console.log('scrape');
 
 	request(scrape_url, function(error, response, html){
 		
@@ -77,14 +83,14 @@ app.get('/scrape', function(req, res){
 				    			throw err;
 				    		}
 				    		else{
-				    			
+				    			res.redirect('/articles');
 				    			console.log(doc);
 				    		}
 				    	});
 		    		}
 		    	});
 			});
-			res.send(`${scrape_url} successfully scraped`);
+			
 		}
 
 	});

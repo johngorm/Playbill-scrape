@@ -61,7 +61,7 @@ hr{
     cursor: pointer;
 }
 
-.modal-body form{
+.modal-body form, .modal-body button{
     float: initial;
 }
 
