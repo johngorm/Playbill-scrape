@@ -28,7 +28,7 @@ app.engine('handlebars', handlebars({defaultLayout: 'main'}));
 app.set('views', __dirname + '/views')
 app.set('view engine', 'handlebars');
 
-mongoose.connect('mongodb://localhost/playbill');
+mongoose.connect('mongodb://heroku_x0zsvqr0:lbh5855vudjnsivk6fbujjp5jt@ds121192.mlab.com:21192/heroku_x0zsvqr0');
 const db = mongoose.connection;
 
 mongoose.Promise = Promise;
@@ -83,13 +83,14 @@ app.get('/scrape', function(req, res){
 				    			throw err;
 				    		}
 				    		else{
-				    			res.redirect('/articles');
+				    			
 				    			console.log(doc);
 				    		}
 				    	});
 		    		}
 		    	});
 			});
+			res.redirect('../articles');
 			
 		}
 
@@ -108,6 +109,7 @@ app.get('/favorites', function(req, res){
 })
 
 app.get('/articles', function(req, res){
+	console.log
 	Article.find({}, (err, results) =>{
 		if(err){
 			throw err;

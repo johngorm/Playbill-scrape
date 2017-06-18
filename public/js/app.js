@@ -42,7 +42,7 @@ $(document).ready(function() {
 
     $(".btn-enter").click(function() {
        
-        window.location = "/articles"
+        window.location = "/scrape"
     });
     // When the user clicks on the button, open the modal 
 
