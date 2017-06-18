@@ -11,10 +11,12 @@ $(document).ready(function() {
     //Function to create submission for artical modal
     function createForm(articleId) {
         let $form = $(`<form action="/articles/${articleId}" method="POST">`);
+        let $titleLabel = $('<label for="title">Title</label> <br>');
         let $commentTitle = $('<input type="text" name="title" id="comment-text" name="article-comment" required> <br> ');
-        let $commentMessage = $('<input type="text" name="message" id="comment-text" name="article-comment" required> <br> ');
+        let $messageLabel = $('<label for="message">Comment</label><br>');
+        let $commentMessage = $('<textarea  name="message" id="comment-text" name="article-comment" row="4" cols="50" required></textarea> <br> ');
         let $commentBtn = $('<button class="btn btn-md btn-info" type="submit">Comment</button>');
-        $form.append($commentTitle).append($commentMessage).append($commentBtn);
+        $form.append($titleLabel).append($commentTitle).append($messageLabel).append($commentMessage).append($commentBtn);
         return $form;
     }
     //Takes in an array of ObjectIDs for Comments that get added to the Comment Section 
