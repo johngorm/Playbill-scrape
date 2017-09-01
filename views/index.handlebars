@@ -4,21 +4,25 @@
     {{#unless newsLink}}
 	   <h1>Cannot connect to playbill.com. Please try again later.</h1>
     {{/unless}}
-
+    
     {{#each newsLink}}
-    	{{> news}}
-    	{{#if saved}}
-    		<button class='btn btn-lg btn-info btn-comment' data-article-id='{{id}}'>Add Comment</button>
-            <form action="/articles/{{id}}?_method=PUT" method='POST'>
-                <button class='btn btn-danger btn-lg' type="submit">Unfavorite</button>
-            </form>
-        {{/if}}
-        {{#unless saved}}
-            <form action="/articles/{{id}}?_method=PUT" method='POST'>
-                <button class='btn btn-success btn-lg' type='submit'>Favorite</button>
-            </form>
-        {{/unless}}
-       	<hr />
+    <div class="row">
+        <div class="newsItem-wrapper">
+            {{> news}}
+            {{#if saved}}
+                <button class='btn btn-lg btn-info btn-comment' data-article-id='{{id}}'>Add Comment</button>
+                <form action="/articles/{{id}}?_method=PUT" method='POST'>
+                    <button class='btn btn-danger btn-lg' type="submit">Unfavorite</button>
+                </form>
+            {{/if}}
+            {{#unless saved}}
+                <form action="/articles/{{id}}?_method=PUT" method='POST'>
+                    <button class='btn btn-success btn-lg' type='submit'>Favorite</button>
+                </form>
+            {{/unless}}
+        </div>
+    </div>
+    <hr />
     {{/each}}
 
     <div id='commentModal' class='modal'>

@@ -60,7 +60,7 @@ $(document).ready(function() {
             url: '/articles/' + id,
             method: 'GET'
         }).done(function(article, status) {
-            let title = $(`<h2><a href=${article.link}>${article.title}</a></h2>`);
+            let title = $(`<h2 class="newsItem"><a href=${article.link} class="newsTitle" >${article.title}</a></h2>`);
             let closeBtn = " <span class='close'>&times;</span>";
             let id_num = $("<span>").html("ID: " + article._id);
             let $commentSection = $('<div>').attr('id', 'commentSection').addClass('well').text('Comments');
